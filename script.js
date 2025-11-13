@@ -3,12 +3,12 @@ document.getElementById("bookScroll").addEventListener("click", () => {
 });
 
 const services = [
-  { name: "Dry Cleaning", price: 200.00 },
-  { name: "Wash & Fold", price: 100.00 },
-  { name: "Ironing", price: 30.00 },
-  { name: "Stain Removal", price: 500.00 },
-  { name: "Leather & Suede Cleaning", price: 999.00 },
-  { name: "Wedding Dress Cleaning", price: 2800.00 },
+  { name: "Dry Cleaning", price: 200.0 },
+  { name: "Wash & Fold", price: 100.0 },
+  { name: "Ironing", price: 30.0 },
+  { name: "Stain Removal", price: 500.0 },
+  { name: "Leather & Suede Cleaning", price: 999.0 },
+  { name: "Wedding Dress Cleaning", price: 2800.0 },
 ];
 
 const serviceList = document.getElementById("services-list");
@@ -54,16 +54,24 @@ services.forEach((service) => {
 
 function updateCart() {
   cartItems.innerHTML = "";
-  cart.forEach((item, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${item.name}</td>
-      <td>₹${item.price}</td>
-    `;
-    cartItems.appendChild(row);
-  });
-  totalDisplay.textContent = total;
+
+  if (cart.length === 0) {
+    const emptyRow = document.createElement("tr");
+    emptyRow.innerHTML = `<td colspan="3" style="text-align:center; color:#666;">No items added</td>`;
+    cartItems.appendChild(emptyRow);
+  } else {
+    cart.forEach((item, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${item.name}</td>
+        <td>₹${item.price}</td>
+      `;
+      cartItems.appendChild(row);
+    });
+  }
+
+  totalDisplay.textContent = total.toFixed(2);
 }
 
 document.getElementById("bookBtn").addEventListener("click", () => {
