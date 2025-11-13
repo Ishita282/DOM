@@ -52,20 +52,23 @@ services.forEach((service) => {
   });
 });
 
+const emptyCartHTML = cartItems.innerHTML;
+
 function updateCart() {
+  const emptyMsg = document.querySelector(".emptyCartMsg");
+
   cartItems.innerHTML = "";
 
   if (cart.length === 0) {
-    const emptyRow = document.createElement("tr");
-    emptyRow.innerHTML = `<td colspan="3" style="text-align:center; color:#666;">No items added</td>`;
-    cartItems.appendChild(emptyRow);
+    emptyMsg.style.display = "block";
   } else {
+    emptyMsg.style.display = "none";
     cart.forEach((item, index) => {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${index + 1}</td>
         <td>${item.name}</td>
-        <td>₹${item.price}</td>
+        <td>₹${item.price.toFixed(2)}</td>
       `;
       cartItems.appendChild(row);
     });
