@@ -1,3 +1,6 @@
+/* global emailjs */
+
+
 document.getElementById("bookScroll").addEventListener("click", () => {
   document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
 });
