@@ -87,11 +87,26 @@ document.getElementById("bookBtn").addEventListener("click", () => {
     return;
   }
 
-  emailMsg.classList.remove("hidden");
+  const serviceNames = cart.map(item => item.name).join(", ");
+  const totalPrice = total.toFixed(2);
+  
+  const templateParams = {
+    user_name: name,
+    user_email: email,
+    user_phone: phone,
+    selected_services: serviceNames,
+    total_amount: totalPrice
+  };
 
-  cart = [];
-  total = 0;
-  updateCart();
+  emailjs
+    .send("service_cjps9f7", "template_cc5mlli", templateParams)
+    .then(() => {
+      emailMsg.classList.remove("hidden");
+
+      cart = [];
+      total = 0;
+      updateCart();
+
 
   document.querySelectorAll(".toggle-btn").forEach((btn) => {
     btn.textContent = "Add Item";
@@ -106,6 +121,10 @@ document.getElementById("bookBtn").addEventListener("click", () => {
   setTimeout(() => {
     emailMsg.classList.add("hidden");
   }, 4000);
+  })
+    .catch((err) => {
+      alert("Failed to send email.\n\n" + JSON.stringify(err));
+    });
 });
 
 document.getElementById("subscribeBtn").addEventListener("click", () => {
@@ -116,12 +135,22 @@ document.getElementById("subscribeBtn").addEventListener("click", () => {
     alert("⚠️ Please enter name and email.");
     return;
   }
+emailjs
+    .send("service_cjps9f7", "template_x5gjrrw", {
+      subscriber_name: name,
+      subscriber_email: email
+    })
+    .then(() => {
+      subMsg.classList.remove("hidden");
 
-  subMsg.classList.remove("hidden");
-  document.getElementById("subName").value = "";
-  document.getElementById("subEmail").value = "";
+      document.getElementById("subName").value = "";
+      document.getElementById("subEmail").value = "";
 
-  setTimeout(() => {
-    subMsg.classList.add("hidden");
-  }, 4000);
+      setTimeout(() => {
+        subMsg.classList.add("hidden");
+      }, 4000);
+    })
+    .catch((err) => {
+      alert("Failed to subscribe.\n\n" + JSON.stringify(err));
+    });
 });
