@@ -1,5 +1,6 @@
-/* global emailjs */
-
+window.onload = function() {
+    emailjs.init("CrhQHGxsJCVh80lXA");
+};
 
 document.getElementById("bookScroll").addEventListener("click", () => {
   document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
