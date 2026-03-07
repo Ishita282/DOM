@@ -1,6 +1,6 @@
-window.onload = function() {
-    emailjs.init("CrhQHGxsJCVh80lXA");
-};
+const emailjs = (window.onload = function () {
+  emailjs.init("CrhQHGxsJCVh80lXA");
+});
 
 document.getElementById("bookScroll").addEventListener("click", () => {
   document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
@@ -27,31 +27,46 @@ let total = 0;
 services.forEach((service) => {
   const div = document.createElement("div");
   div.classList.add("service-item");
+
   div.innerHTML = `
     <div class="service-details">
       <strong>🏷️ ${service.name}</strong> • ₹${service.price}
     </div>
     <button class="toggle-btn add">Add Item</button>
   `;
+
   serviceList.appendChild(div);
 
   const btn = div.querySelector(".toggle-btn");
 
   btn.addEventListener("click", () => {
-    const i = cart.findIndex((item) => item.name === service.name);
+    let i = -1;
+
+    for (let index = 0; index < cart.length; index++) {
+      if (cart[index].name === service.name) {
+        i = index;
+        break;
+      }
+    }
+
     if (i === -1) {
       cart.push(service);
-      total += service.price;
+
+      total = total + service.price;
+
       btn.textContent = "Remove Item";
       btn.classList.remove("add");
       btn.classList.add("remove");
     } else {
-      total -= cart[i].price;
+      total = total - cart[i].price;
+
       cart.splice(i, 1);
+
       btn.textContent = "Add Item";
       btn.classList.remove("remove");
       btn.classList.add("add");
     }
+
     updateCart();
   });
 });
@@ -67,13 +82,16 @@ function updateCart() {
     emptyMsg.style.display = "block";
   } else {
     emptyMsg.style.display = "none";
+
     cart.forEach((item, index) => {
       const row = document.createElement("tr");
+
       row.innerHTML = `
         <td>${index + 1}</td>
         <td>${item.name}</td>
         <td>₹${item.price.toFixed(2)}</td>
       `;
+
       cartItems.appendChild(row);
     });
   }
@@ -91,41 +109,43 @@ document.getElementById("bookBtn").addEventListener("click", () => {
     return;
   }
 
-  const serviceNames = cart.map(item => item.name).join(", ");
+  const serviceNames = cart.map((item) => item.name).join(", ");
   const totalPrice = total.toFixed(2);
-  
+
   const templateParams = {
     user_name: name,
     user_email: email,
     user_phone: phone,
     selected_services: serviceNames,
-    total_amount: totalPrice
+    total_amount: totalPrice,
   };
 
   emailjs
     .send("service_cjps9f7", "template_cc5mlli", templateParams)
+
     .then(() => {
       emailMsg.classList.remove("hidden");
 
       cart = [];
       total = 0;
+
       updateCart();
 
+      document.querySelectorAll(".toggle-btn").forEach((btn) => {
+        btn.textContent = "Add Item";
+        btn.classList.remove("remove");
+        btn.classList.add("add");
+      });
 
-  document.querySelectorAll(".toggle-btn").forEach((btn) => {
-    btn.textContent = "Add Item";
-    btn.classList.remove("remove");
-    btn.classList.add("add");
-  });
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("phone").value = "";
 
-  document.getElementById("name").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("phone").value = "";
+      setTimeout(() => {
+        emailMsg.classList.add("hidden");
+      }, 4000);
+    })
 
-  setTimeout(() => {
-    emailMsg.classList.add("hidden");
-  }, 4000);
-  })
     .catch((err) => {
       alert("Failed to send email.\n\n" + JSON.stringify(err));
     });
@@ -139,11 +159,13 @@ document.getElementById("subscribeBtn").addEventListener("click", () => {
     alert("⚠️ Please enter name and email.");
     return;
   }
-emailjs
+
+  emailjs
     .send("service_cjps9f7", "template_x5gjrrw", {
       subscriber_name: name,
-      subscriber_email: email
+      subscriber_email: email,
     })
+
     .then(() => {
       subMsg.classList.remove("hidden");
 
@@ -154,6 +176,7 @@ emailjs
         subMsg.classList.add("hidden");
       }, 4000);
     })
+
     .catch((err) => {
       alert("Failed to subscribe.\n\n" + JSON.stringify(err));
     });

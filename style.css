@@ -441,7 +441,6 @@ nav ul li a {
   display: none;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .newsletter {
     flex-direction: column;
