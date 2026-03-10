@@ -1,6 +1,6 @@
-const emailjs = (window.onload = function () {
-  emailjs.init("CrhQHGxsJCVh80lXA");
-});
+window.onload = function () {
+  emailjs.init("vhxGw3K_-Vr-Ij81v");
+};
 
 document.getElementById("bookScroll").addEventListener("click", () => {
   document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
@@ -122,13 +122,11 @@ document.getElementById("bookBtn").addEventListener("click", () => {
 
   emailjs
     .send("service_cjps9f7", "template_cc5mlli", templateParams)
-
     .then(() => {
       emailMsg.classList.remove("hidden");
 
       cart = [];
       total = 0;
-
       updateCart();
 
       document.querySelectorAll(".toggle-btn").forEach((btn) => {
@@ -145,9 +143,9 @@ document.getElementById("bookBtn").addEventListener("click", () => {
         emailMsg.classList.add("hidden");
       }, 4000);
     })
-
     .catch((err) => {
-      alert("Failed to send email.\n\n" + JSON.stringify(err));
+      console.log(err);
+      alert("Failed to send email.");
     });
 });
 
@@ -178,6 +176,7 @@ document.getElementById("subscribeBtn").addEventListener("click", () => {
     })
 
     .catch((err) => {
-      alert("Failed to subscribe.\n\n" + JSON.stringify(err));
+      console.log(err);
+      alert("Failed to send email.");
     });
 });
