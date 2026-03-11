@@ -2,10 +2,12 @@ window.onload = function () {
   emailjs.init("vhxGw3K_-Vr-Ij81v");
 };
 
+// This will help the btn to scroll down to the services
 document.getElementById("bookScroll").onclick = function () {
   document.getElementById("services").scrollIntoView();
 };
 
+// Make an array for the services
 const services = [
   { name: "Dry Cleaning", price: 200 },
   { name: "Wash & Fold", price: 100 },
@@ -15,15 +17,21 @@ const services = [
   { name: "Wedding Dress Cleaning", price: 2800 }
 ];
 
+
+// Get all the elements
 const serviceList = document.getElementById("services-list");
 const cartItems = document.getElementById("cart-items");
 const totalAmount = document.getElementById("total");
 const emailMsg = document.getElementById("emailMsg");
 const subMsg = document.getElementById("subMsg");
 
+// Initialise empty cart array
 let cart = [];
+
+// Set total as 0 so that total will calculate without junk
 let total = 0;
 
+// Add services to the table which is in the html
 for (let i = 0; i < services.length; i++) {
   const service = services[i];
 
@@ -41,6 +49,8 @@ for (let i = 0; i < services.length; i++) {
 
   const button = div.querySelector("button");
 
+
+  // after clicking add and remove btn
   button.onclick = function () {
     let index = -1;
 
@@ -65,10 +75,13 @@ for (let i = 0; i < services.length; i++) {
       button.className = "btn add";
     }
 
+    //update the cart
     updateCart();
   };
 }
 
+
+// after sending email after the cart to empty for future use
 function updateCart() {
   const emptyMsg = document.querySelector(".emptyCartMsg");
 
@@ -109,6 +122,8 @@ function updateCart() {
   totalAmount.textContent = total;
 }
 
+
+// Getting elements to send the email
 document.getElementById("bookBtn").onclick = function () {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -137,6 +152,8 @@ document.getElementById("bookBtn").onclick = function () {
     total_amount: total
   };
 
+
+  // Send email
   emailjs
     .send("service_cjps9f7", "template_cc5mlli", params)
     .then(function () {
@@ -160,6 +177,7 @@ document.getElementById("bookBtn").onclick = function () {
     });
 };
 
+// Getting the elements to send the email
 document.getElementById("subscribeBtn").onclick = function () {
   const name = document.getElementById("subName").value.trim();
   const email = document.getElementById("subEmail").value.trim();
