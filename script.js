@@ -2,76 +2,72 @@ window.onload = function () {
   emailjs.init("vhxGw3K_-Vr-Ij81v");
 };
 
-document.getElementById("bookScroll").addEventListener("click", () => {
-  document.querySelector("#booking").scrollIntoView({ behavior: "smooth" });
-});
+document.getElementById("bookScroll").onclick = function () {
+  document.getElementById("services").scrollIntoView();
+};
 
 const services = [
-  { name: "Dry Cleaning", price: 200.0 },
-  { name: "Wash & Fold", price: 100.0 },
-  { name: "Ironing", price: 30.0 },
-  { name: "Stain Removal", price: 500.0 },
-  { name: "Leather & Suede Cleaning", price: 999.0 },
-  { name: "Wedding Dress Cleaning", price: 2800.0 },
+  { name: "Dry Cleaning", price: 200 },
+  { name: "Wash & Fold", price: 100 },
+  { name: "Ironing", price: 30 },
+  { name: "Stain Removal", price: 500 },
+  { name: "Leather & Suede Cleaning", price: 999 },
+  { name: "Wedding Dress Cleaning", price: 2800 }
 ];
 
 const serviceList = document.getElementById("services-list");
 const cartItems = document.getElementById("cart-items");
-const totalDisplay = document.getElementById("total");
+const totalAmount = document.getElementById("total");
 const emailMsg = document.getElementById("emailMsg");
 const subMsg = document.getElementById("subMsg");
 
 let cart = [];
 let total = 0;
 
-services.forEach((service) => {
-  const div = document.createElement("div");
-  div.classList.add("service-item");
+for (let i = 0; i < services.length; i++) {
+  const service = services[i];
 
-  div.innerHTML = `
-    <div class="service-details">
-      <strong>🏷️ ${service.name}</strong> • ₹${service.price}
-    </div>
-    <button class="toggle-btn add">Add Item</button>
-  `;
+  const div = document.createElement("div");
+  div.className = "service-item";
+
+  div.innerHTML =
+    "<strong>" +
+    service.name +
+    "</strong> : ₹" +
+    service.price +
+    ' <button class="btn add">Add</button>';
 
   serviceList.appendChild(div);
 
-  const btn = div.querySelector(".toggle-btn");
+  const button = div.querySelector("button");
 
-  btn.addEventListener("click", () => {
-    let i = -1;
+  button.onclick = function () {
+    let index = -1;
 
-    for (let index = 0; index < cart.length; index++) {
-      if (cart[index].name === service.name) {
-        i = index;
+    for (let j = 0; j < cart.length; j++) {
+      if (cart[j].name === service.name) {
+        index = j;
         break;
       }
     }
 
-    if (i === -1) {
+    if (index === -1) {
       cart.push(service);
-
       total = total + service.price;
 
-      btn.textContent = "Remove Item";
-      btn.classList.remove("add");
-      btn.classList.add("remove");
+      button.textContent = "Remove";
+      button.className = "btn remove";
     } else {
-      total = total - cart[i].price;
+      total = total - cart[index].price;
+      cart.splice(index, 1);
 
-      cart.splice(i, 1);
-
-      btn.textContent = "Add Item";
-      btn.classList.remove("remove");
-      btn.classList.add("add");
+      button.textContent = "Add";
+      button.className = "btn add";
     }
 
     updateCart();
-  });
-});
-
-const emptyCartHTML = cartItems.innerHTML;
+  };
+}
 
 function updateCart() {
   const emptyMsg = document.querySelector(".emptyCartMsg");
@@ -80,103 +76,115 @@ function updateCart() {
 
   if (cart.length === 0) {
     emptyMsg.style.display = "block";
+
+    // reset all buttons to "Add"
+    const buttons = document.querySelectorAll("#services-list .btn");
+
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].textContent = "Add";
+      buttons[i].className = "btn add";
+    }
+
   } else {
     emptyMsg.style.display = "none";
-
-    cart.forEach((item, index) => {
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${item.name}</td>
-        <td>₹${item.price.toFixed(2)}</td>
-      `;
-
-      cartItems.appendChild(row);
-    });
   }
 
-  totalDisplay.textContent = total.toFixed(2);
+  for (let i = 0; i < cart.length; i++) {
+    const item = cart[i];
+
+    cartItems.innerHTML +=
+      "<tr>" +
+      "<td>" +
+      (i + 1) +
+      "</td>" +
+      "<td>" +
+      item.name +
+      "</td>" +
+      "<td>₹" +
+      item.price +
+      "</td>" +
+      "</tr>";
+  }
+
+  totalAmount.textContent = total;
 }
 
-document.getElementById("bookBtn").addEventListener("click", () => {
+document.getElementById("bookBtn").onclick = function () {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone").value.trim();
 
-  if (!name || !email || !phone || cart.length === 0) {
-    alert("⚠️ Please fill all fields and add at least one service.");
+  if (name === "" || email === "" || phone === "" || cart.length === 0) {
+    alert("Please fill all fields and add a service.");
     return;
   }
 
-  const serviceNames = cart.map((item) => item.name).join(", ");
-  const totalPrice = total.toFixed(2);
+  let serviceNames = "";
 
-  const templateParams = {
+  for (let i = 0; i < cart.length; i++) {
+    serviceNames = serviceNames + cart[i].name;
+
+    if (i !== cart.length - 1) {
+      serviceNames = serviceNames + ", ";
+    }
+  }
+
+  const params = {
     user_name: name,
     user_email: email,
     user_phone: phone,
     selected_services: serviceNames,
-    total_amount: totalPrice,
+    total_amount: total
   };
 
   emailjs
-    .send("service_cjps9f7", "template_cc5mlli", templateParams)
-    .then(() => {
+    .send("service_cjps9f7", "template_cc5mlli", params)
+    .then(function () {
       emailMsg.classList.remove("hidden");
 
       cart = [];
       total = 0;
-      updateCart();
 
-      document.querySelectorAll(".toggle-btn").forEach((btn) => {
-        btn.textContent = "Add Item";
-        btn.classList.remove("remove");
-        btn.classList.add("add");
-      });
+      updateCart();
 
       document.getElementById("name").value = "";
       document.getElementById("email").value = "";
       document.getElementById("phone").value = "";
 
-      setTimeout(() => {
+      setTimeout(function () {
         emailMsg.classList.add("hidden");
       }, 4000);
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(function () {
       alert("Failed to send email.");
     });
-});
+};
 
-document.getElementById("subscribeBtn").addEventListener("click", () => {
+document.getElementById("subscribeBtn").onclick = function () {
   const name = document.getElementById("subName").value.trim();
   const email = document.getElementById("subEmail").value.trim();
 
-  if (!name || !email) {
-    alert("⚠️ Please enter name and email.");
+  if (name === "" || email === "") {
+    alert("Please enter name and email.");
     return;
   }
 
   emailjs
     .send("service_cjps9f7", "template_x5gjrrw", {
       subscriber_name: name,
-      subscriber_email: email,
+      subscriber_email: email
     })
-
-    .then(() => {
+    .then(function () {
       subMsg.classList.remove("hidden");
 
       document.getElementById("subName").value = "";
       document.getElementById("subEmail").value = "";
 
-      setTimeout(() => {
+      setTimeout(function () {
         subMsg.classList.add("hidden");
       }, 4000);
     })
-
-    .catch((err) => {
-      console.log(err);
-      alert("Failed to send email.");
+    .catch(function () {
+      alert("Failed to subscribe.");
     });
-});
+};

@@ -112,7 +112,7 @@ nav ul li a {
   font-size: 0.9em;
 }
 
-.booking {
+.services {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -168,7 +168,7 @@ nav ul li a {
   font-weight: 500;
 }
 
-.toggle-btn {
+.btn {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
@@ -177,16 +177,16 @@ nav ul li a {
   color: white;
   transition: background 0.3s;
 }
-.toggle-btn.add {
-  background-color: #2563eb; /* blue */
+.btn.add {
+  background-color: #2563eb;
 }
-.toggle-btn.add:hover {
+.btn.add:hover {
   background-color: #1e40af;
 }
-.toggle-btn.remove {
-  background-color: #dc2626; /* red */
+.btn.remove {
+  background-color: #dc2626;
 }
-.toggle-btn.remove:hover {
+.btn.remove:hover {
   background-color: #991b1b;
 }
 
@@ -441,43 +441,6 @@ nav ul li a {
   display: none;
 }
 
-@media (max-width: 768px) {
-  .newsletter {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .input-row {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .newsletter input,
-  .newsletter button {
-    width: 100%;
-  }
-}
-
-
-@media (max-width: 768px) {
-  .newsletter {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .newsletter .right-side {
-    justify-content: center;
-  }
-
-  .newsletter input {
-    width: 100%;
-  }
-
-  .newsletter button {
-    width: 100%;
-  }
-}
-
 footer {
   display: flex;
   justify-content: space-between;
@@ -543,15 +506,5 @@ footer {
   font-size: 14px;
   letter-spacing: 8px;
   font-variant: small-caps;
-}
-
-
-
-@media (max-width: 768px) {
-  footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
 }
 
